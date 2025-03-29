@@ -7,6 +7,9 @@ Container Orchestration with Kubernetes.
 **Monolith and Microservices**[^1]:
 ![Monolith and Microservices](diagrams/monolith-and-microservices.svg)
 
+**Kubernetes Cluster Architecture**:
+![Kubernetes Cluster Architecture](diagrams/cluster-architecture.svg)
+
 ## References
 
 - [martian-bank-demo](https://github.com/cisco-open/martian-bank-demo)
