@@ -10,6 +10,9 @@ Container Orchestration with Kubernetes.
 **Kubernetes Cluster Architecture**:
 ![Kubernetes Cluster Architecture](diagrams/cluster-architecture.svg)
 
+**Kubernetes Cluster Namespaces**:
+![Cluster Namespaces](diagrams/cluster-namespaces.svg)
+
 ## References
 
 - [martian-bank-demo](https://github.com/cisco-open/martian-bank-demo)
