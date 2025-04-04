@@ -13,6 +13,9 @@ Container Orchestration with Kubernetes.
 **Kubernetes Cluster Namespaces**:
 ![Cluster Namespaces](diagrams/cluster-namespaces.svg)
 
+**Network Isolation**:
+![Network Isolation](diagrams/network-isolation.svg)
+
 ## References
 
 - [martian-bank-demo](https://github.com/cisco-open/martian-bank-demo)
