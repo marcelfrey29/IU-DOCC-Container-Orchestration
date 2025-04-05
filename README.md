@@ -7,6 +7,7 @@ Container Orchestration with Kubernetes.
 - A Kubernetes Cluster (e.g. via Docker Desktop) 
 - `kubectl` must be installed
 - `helm` must be installed ([Docs](https://helm.sh/docs/intro/install/))
+- `trivy` must be installed ([Docs](https://trivy.dev/latest/getting-started/installation/))
 
 ## Deployment of the Banking App
 
@@ -54,7 +55,44 @@ curl --head http://localhost:8080
 
 ## Security
 
-### Falco for Cluster Scanning
+### Trivy for SAST and manual checks
+
+- [Trivy](https://trivy.dev/)
+    - Scan container images, project, and K8s
+    - Check for vulnerabilities (CVEs), misconfigurations, and secrets
+    - Provide recommendations (e.g. fixed version)
+- Scans (Source[^3])
+    - Image
+        - Base Image
+        - Dependencies (e.g. Node Packages / `package.json`)
+    - Project
+        - Code Dependencies (e.g. npm / `package.json`)
+        - Dockerfiles
+        - Kubernetes Manifests
+        - Helm Charts
+    - Kubernetes
+        - Workload Assessment
+        - Infra Assessment (The `kube-system` namespace and Nodes)
+        - RBAC Assessment (checks `(Cluster)Role`s and `(Cluster)RoleBindings`)
+
+```bash
+# Scan a Container Image from the Registry
+# We're using the base image of the "atm-locator" which is Node.js 14
+trivy image --scanners vuln,secret,misconfig node:14
+
+# Scan a project directory
+cd martian-bank-demo
+trivy fs --scanners vuln,secret,misconfig .
+
+# Scan K8s cluster
+trivy k8s --report=summary
+```
+
+![Trivy Image Scan](img/trivy-image.png)
+
+![Trivy K8s Scan](img/trivy-k8s.png)
+
+### Falco for Continuous Cluster Scanning
 
 Install [Falco](https://falco.org/) in Kubernetes and trigger an alarm[^2].
 
@@ -113,3 +151,5 @@ kubectl delete deployment nginx
 - [martian-bank-demo](https://github.com/cisco-open/martian-bank-demo)
 
 [^1]: Based on https://github.com/cisco-open/martian-bank-demo/blob/main/images/Arch.png
+[^2]: Based on https://falco.org/docs/getting-started/falco-kubernetes-quickstart/
+[^3]: Based on https://trivy.dev/latest/getting-started/
