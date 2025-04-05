@@ -134,6 +134,45 @@ kubectl delete deployment nginx
 **Falco alerting process and automation with Falcosidekick, Teams, Opsgenie, and Jira[^4]**:
 ![Falco Alerting Process](diagrams/falco-alerting.svg)
 
+## Observability
+
+Observe the Kubernetes Cluster with [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/oss/grafana/) via [Prometheus Community Helm Charts](https://github.com/prometheus-community/helm-charts/).
+
+```bash
+# Add the Repository
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+
+# Install Prometheus Helm Chart in the "observability" namespace
+# 
+# The Cart installs additional Tools
+# - Kube Stats Metrics
+# - Prometheus Node Exporter
+# - Grafana
+helm install prometheus --namespace observability prometheus-community/kube-prometheus-stack
+
+# Check Pod Status
+kubectl get pods -n observability
+
+# Fix the Node Exporter in case it is in a CrashLoop due to a mount error in the logs
+# 
+# Example Error from the Logs: 
+# failed to try resolving symlinks in path "/var/log/pods/observability_prometheus-prometheus-node-exporter-tjncm_f4e31656-9150-4975-a94d-61b04ce71af2/node-exporter/10.log": lstat /var/log/pods/observability_prometheus-prometheus-node-exporter-tjncm_f4e31656-9150-4975-a94d-61b04ce71af2/node-exporter/10.log: no such file or directory
+# 
+# Solution: Remove the mount (see https://github.com/prometheus-operator/kube-prometheus/discussions/790#discussioncomment-6896643)                                                
+kubectl logs -n observability prometheus-prometheus-node-exporter-tjncm # Adjust to your pod name!
+kubectl get ds -n observability  
+kubectl patch ds -n observability prometheus-prometheus-node-exporter --type "json" -p '[{"op": "remove", "path" : "/spec/template/spec/containers/0/volumeMounts/2/mountPropagation"}]'
+
+# Get the password for the Granfana "admin" user
+kubectl --namespace observability get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+
+# Forward the Grafana Dashboard to http://localhost:3000
+kubectl --namespace observability port-forward $(kubectl --namespace observability get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -oname) 3000
+```
+
+**Running Pods in the `observability` namespace**:
+![Pods of the Observability Namespace](img/observability-pods.png)
 
 ## Architecture Diagrams
 
