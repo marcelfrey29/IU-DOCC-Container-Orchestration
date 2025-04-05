@@ -52,6 +52,47 @@ curl --head http://localhost:8080
 
 ![Martian Bank Deployment](img/martian-bank-deployment.png)
 
+## Security
+
+### Falco for Cluster Scanning
+
+Install [Falco](https://falco.org/) in Kubernetes and trigger an alarm[^2].
+
+```bash
+# Add the Falco Repository and update all repositories
+helm repo add falcosecurity https://falcosecurity.github.io/charts
+helm repo update
+
+# Create a namespace for observability services
+kubectl create namespace observability
+
+# Install the Helm Chart in the "observability" namespace
+helm install falco --namespace observability --set tty=true falcosecurity/falco
+
+# Make sure Falco is running
+kubectl get pods -n observability
+
+# Get Falco Logs
+kubectl logs -l app.kubernetes.io/name=falco -n observability -c falco
+```
+
+```bash
+# Run a nginx container in the default namespace
+kubectl create deployment nginx --image=nginx
+
+# Read a sensitive file in the nginx container (which should trigger an alert in Falco)
+kubectl exec -it $(kubectl get pods --selector=app=nginx -o name) -- cat /etc/shadow
+
+# Check Falco Logs
+kubectl logs -l app.kubernetes.io/name=falco -n observability -c falco
+kubectl logs -l app.kubernetes.io/name=falco -n observability -c falco | grep Warning
+
+# Cleanup 
+kubectl delete deployment nginx
+```
+
+![Falco Warning](img/falco-warning.png)
+
 
 ## Architecture Diagrams
 
