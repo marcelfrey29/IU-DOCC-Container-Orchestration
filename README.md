@@ -128,8 +128,11 @@ kubectl logs -l app.kubernetes.io/name=falco -n observability -c falco | grep Wa
 # Cleanup 
 kubectl delete deployment nginx
 ```
-
+**Running Falco in Kubernetes and trigger an alert**:
 ![Falco Warning](img/falco-warning.png)
+
+**Falco alerting process and automation with Falcosidekick, Teams, Opsgenie, and Jira[^4]**:
+![Falco Alerting Process](diagrams/falco-alerting.svg)
 
 
 ## Architecture Diagrams
@@ -153,3 +156,4 @@ kubectl delete deployment nginx
 [^1]: Based on https://github.com/cisco-open/martian-bank-demo/blob/main/images/Arch.png
 [^2]: Based on https://falco.org/docs/getting-started/falco-kubernetes-quickstart/
 [^3]: Based on https://trivy.dev/latest/getting-started/
+[^4]: Based on https://github.com/falcosecurity/falcosidekick/blob/master/imgs/falco_with_falcosidekick.png
