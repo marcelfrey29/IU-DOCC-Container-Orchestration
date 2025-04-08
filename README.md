@@ -53,6 +53,27 @@ curl --head http://localhost:8080
 
 ![Martian Bank Deployment](img/martian-bank-deployment.png)
 
+## RBAC
+
+The `rbac-observability-pod-read-only.yml` file defines a `Role` and `RoleBinding` which grant read-only access to pods in the `observability` namespace to the user `marcelmonitoring`.
+
+```bash
+# Apply the manifest
+kubectl apply -f rbac-observability-pod-read-only.yml
+
+# Try to list pods in the observability namespace with the user marcelmonitoring
+# This should work
+kubectl get pods -n observability --as=marcelmonitoring
+
+# Try to list pods in the default namespace with the user marcelmonitoring
+# This should not work
+kubectl get pods -n default --as=marcelmonitoring
+```
+
+**Kubernetes RBAC Example**:
+
+![RBAC Example](img/rbac.png)
+
 ## Security
 
 ### Trivy for SAST and manual checks
