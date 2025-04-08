@@ -195,6 +195,14 @@ kubectl --namespace observability port-forward $(kubectl --namespace observabili
 **Running Pods in the `observability` namespace**:
 ![Pods of the Observability Namespace](img/observability-pods.png)
 
+**Grafana Dashboard with Kubernetes Metrics**:
+
+![Grafana Dashboard with Kubernetes Metrics](img/grafana-01.png)
+
+**Grafana Dashboard with Node Metrics**:
+
+![Grafana Dashboard with Node Metrics](img/grafana-02.png)
+
 ## Architecture Diagrams
 
 **Monolith and Microservices**[^1]:
