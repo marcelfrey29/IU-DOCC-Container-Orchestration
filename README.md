@@ -1,6 +1,12 @@
 # IU-DOCC-Container-Orchestration
 
-Container Orchestration with Kubernetes.
+Container Orchestration with Kubernetes - Focussing on Security and Observability.
+
+- [x] Deployment of an example app to **Kubernetes** with **Helm** and usage of **`kubectl`**
+- [x] K8s **Role-based Access Control** (**RBAC**)
+- [x] Static Security Scanning with **Trivy**
+- [x] Continuos Cluster Security Monitoring with **Falco**
+- [x] **Observability** with **Prometheus** and **Grafana**
 
 ## Requirements
 
@@ -50,6 +56,8 @@ kubectl get services -n martian-bank | grep nginx
 curl http://localhost:8080 
 curl --head http://localhost:8080
 ```
+
+**The running Martian Bank Application in Kubernetes**:
 
 ![Martian Bank Deployment](img/martian-bank-deployment.png)
 
@@ -109,7 +117,11 @@ trivy fs --scanners vuln,secret,misconfig .
 trivy k8s --report=summary
 ```
 
+**Trivy Image Scan Result (`node:14` image used by the `atm-locator` service)**:
+
 ![Trivy Image Scan](img/trivy-image.png)
+
+**Trivy K8s Cluster Scan Result**:
 
 ![Trivy K8s Scan](img/trivy-k8s.png)
 
@@ -149,10 +161,13 @@ kubectl logs -l app.kubernetes.io/name=falco -n observability -c falco | grep Wa
 # Cleanup 
 kubectl delete deployment nginx
 ```
+
 **Running Falco in Kubernetes and trigger an alert**:
+
 ![Falco Warning](img/falco-warning.png)
 
 **Falco alerting process and automation with Falcosidekick, Teams, Opsgenie, and Jira[^4]**:
+
 ![Falco Alerting Process](diagrams/falco-alerting.svg)
 
 ## Observability
@@ -193,6 +208,7 @@ kubectl --namespace observability port-forward $(kubectl --namespace observabili
 ```
 
 **Running Pods in the `observability` namespace**:
+
 ![Pods of the Observability Namespace](img/observability-pods.png)
 
 **Grafana Dashboard with Kubernetes Metrics**:
@@ -206,15 +222,19 @@ kubectl --namespace observability port-forward $(kubectl --namespace observabili
 ## Architecture Diagrams
 
 **Monolith and Microservices**[^1]:
+
 ![Monolith and Microservices](diagrams/monolith-and-microservices.svg)
 
 **Kubernetes Cluster Architecture**:
+
 ![Kubernetes Cluster Architecture](diagrams/cluster-architecture.svg)
 
 **Kubernetes Cluster Namespaces**:
+
 ![Cluster Namespaces](diagrams/cluster-namespaces.svg)
 
 **Network Isolation**:
+
 ![Network Isolation](diagrams/network-isolation.svg)
 
 ## References
